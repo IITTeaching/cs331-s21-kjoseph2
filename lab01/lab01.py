@@ -22,8 +22,17 @@ def captured_output():
 
 # implement this function
 def is_perfect(n):
-    pass
-
+    perfectDivisors = []
+    sum = 0
+    for x in range(1, n):
+      if(n%x == 0):
+        perfectDivisors.append(x)
+    for i in range(len(perfectDivisors)):
+      sum += perfectDivisors[i]
+    if(sum == n):
+      return True
+    else:
+      return False
 # (3 points)
 def test1():
     tc = unittest.TestCase()
@@ -40,7 +49,14 @@ def test1():
 
 # implement this function
 def multiples_of_3_and_5(n):
-    pass
+    multiples = []
+    sum = 0
+    for x in range(n):
+      if x%3 == 0 or x%5 == 0:
+        multiples.append(x)
+    for i in range(len(multiples)):
+      sum += multiples[i]
+    return sum
 
 # (3 points)
 def test2():
@@ -52,8 +68,15 @@ def test2():
 #################################################################################
 # EXERCISE 3
 #################################################################################
+import math
 def integer_right_triangles(p):
-    pass
+    possible = 0
+    for i in range(1,p+1):
+      for j in range(i+1,p+1):
+        for k in range(j+1,p+1):
+          if i+j+k == p and math.sqrt((i*i)+(j*j)) == math.sqrt(k*k):
+            possible += 1
+    return possible
 
 def test3():
     tc = unittest.TestCase()
@@ -67,7 +90,17 @@ def test3():
 
 # implement this function
 def gen_pattern(chars):
-    pass
+    maxLength = len(chars) * 4 - 3
+    output = []
+
+    for i in range(len(chars)):
+        upperHalf = chars[-1:-i - 1:-1]
+        bottomHalf = chars[-i - 1:]
+        preOutput = upperHalf + bottomHalf
+        output.append('.'.join(preOutput).center(maxLength, '.'))
+    output += output[-2::-1]
+    output = '\n'.join(output)
+    return(output)
 
 def test4():
     tc = unittest.TestCase()
