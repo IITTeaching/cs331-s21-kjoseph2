@@ -55,6 +55,26 @@ class LinkedList:
         """Implements `del self[idx]`"""
         assert(isinstance(idx, int))
         ### BEGIN SOLUTION
+        HeadVal = self.head
+
+        if (HeadVal is not None):
+            if (HeadVal.data == idx):
+                self.head = HeadVal.next
+                HeadVal = None
+                return
+
+        while (HeadVal is not None):
+            if HeadVal.data == idx:
+                break
+            prev = HeadVal
+            HeadVal = HeadVal.next
+
+        if (HeadVal == None):
+            return
+
+        prev.next = HeadVal.next
+
+        HeadVal = None
         ### END SOLUTION
 
     ### cursor-based access ###

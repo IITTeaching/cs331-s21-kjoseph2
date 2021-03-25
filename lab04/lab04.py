@@ -117,11 +117,30 @@ class ArrayList:
         and enclosed by square brackets. E.g., for a list containing values
         1, 2 and 3, returns '[1, 2, 3]'."""
         ### BEGIN SOLUTION
+        if len(self.data) == 0:
+        return '[]'
+        string=''
+        something= '['
+        string = string + something
+        for x in range(0,len(self.data)):
+            something=str(self.data[x])
+            if len(self.data) > 1:
+                if x < len(self.data)-1:
+                   string = string +something + ', '
+                else:
+                    string = string + something
+                else:
+                    string = string + something
+  
+        something = ']'
+        string = string + something
+        return string
         ### END SOLUTION
 
     def __repr__(self):
         """Supports REPL inspection. (Same behavior as `str`.)"""
         ### BEGIN SOLUTION
+        return str(self)
         ### END SOLUTION
 
 
@@ -171,6 +190,10 @@ class ArrayList:
     def __len__(self):
         """Implements `len(self)`"""
         ### BEGIN SOLUTION
+        count = 0
+        for i in range(0, len(self.data)):
+            count+=1
+        return count
         ### END SOLUTION
 
     def min(self):
