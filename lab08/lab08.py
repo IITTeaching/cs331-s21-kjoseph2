@@ -22,12 +22,70 @@ class Heap:
     def _right(idx):
         return idx*2+2
 
+    def switch_node(self, parent, child):
+        parentval = self.data[parent]
+        childval = self.data[child]
+        self.data[parent] = childval
+        self.data[child] = parentval
+
     def heapify(self, idx=0):
         ### BEGIN SOLUTION
+        left = Heap._left(idx)
+        right = Heap._right(idx)
+
+        if right<len(self.data):
+          if self.key(self.data[right]) > self.key(self.data[idx]):
+            if self.key(self.data[left]) > self.key(self.data[right]):
+              self.data[idx], self.data[left] = self.data[left], self.data[idx]
+              self.heapify(left)
+            else:
+              self.data[idx], self.data[right] = self.data[right], self.data[idx]
+              self.heapify(right)
+
+          if self.key(self.data[left]) > self.key(self.data[idx]):
+            if self.key(self.data[left]) > self.key(self.data[right]):
+              self.data[idx], self.data[left] = self.data[left], self.data[idx]
+              self.heapify(left)
+            else:
+              self.data[idx], self.data[right] = self.data[right], self.data[idx]
+              self.heapify(right)
+              
+        if left<len(self.data):
+          if self.key(self.data[left]) > self.key(self.data[idx]):
+            self.data[idx], self.data[left] = self.data[left], self.data[idx] 
         ### END SOLUTION
+
+    def trickle_up(self, idx):
+        if idx == 0:
+            return
+        
+        p = self._parent(idx)
+        parentval = self.key(self.data[p])
+        curval = self.key(self.data[idx])
+
+        if parentval < curval:
+            #Swap parent with biggest child
+            leftidx = self._left(p)
+            rightidx = self._right(p)
+            
+            #Account for out of index
+            if leftidx >= len(self.data):
+                self.switch_node(p, rightidx)
+                self.trickle_up(p)
+            elif rightidx >= len(self.data):
+                self.switch_node(p, leftidx)
+                self.trickle_up(p)
+            elif self.key(self.data[leftidx]) > self.key(self.data[rightidx]):
+                self.switch_node(p, leftidx)
+                self.trickle_up(p)
+            else:
+                self.switch_node(p, rightidx)
+                self.trickle_up(p)
 
     def add(self, x):
         ### BEGIN SOLUTION
+        self.data.append(x)
+        self.trickle_up(len(self.data) - 1)
         ### END SOLUTION
 
     def peek(self):
@@ -130,6 +188,40 @@ def test_key_heap_5():
 ################################################################################
 def running_medians(iterable):
     ### BEGIN SOLUTION
+    maxheap = Heap(lambda x:x)
+    minheap = Heap(lambda x:-x)
+    curmedian = None
+    medians = []
+
+    for x in iterable:
+        #Special first case
+        if curmedian is None:
+            curmedian = x
+            maxheap.add(x)
+        #If bigger than running median, add to minheap
+        elif(x > curmedian):
+            minheap.add(x)
+        #If smaller than running median, add to maxheap
+        else:
+            maxheap.add(x)
+        
+        #Rebalance, difference between lengths of heaps should not be more than 1
+        if len(maxheap) - len(minheap) > 1:
+            minheap.add(maxheap.pop())
+        elif len(minheap) - len(maxheap) > 1:
+            maxheap.add(minheap.pop())
+
+        #Recompute the running median
+        if len(maxheap) == len(minheap):
+            curmedian = (maxheap.peek() + minheap.peek()) / 2
+        elif len(maxheap) > len(minheap):
+            curmedian = maxheap.peek()
+        else:
+            curmedian = minheap.peek()
+
+        medians.append(curmedian)
+
+    return medians
     ### END SOLUTION
 
 ################################################################################
@@ -174,6 +266,13 @@ def test_median_3():
 ################################################################################
 def topk(items, k, keyf):
     ### BEGIN SOLUTION
+    result = []
+    maxheap = Heap(keyf)
+    for x in items:
+        maxheap.add(x)
+    for x in range(k):
+        result.append(maxheap.pop())
+    return result
     ### END SOLUTION
 
 ################################################################################
