@@ -6,18 +6,42 @@ def quicksort(lst,pivot_fn):
 
 def qsort(lst,low,high,pivot_fn):
     ### BEGIN SOLUTION
+    if low < high:
+        p = scheme(lst, low, high, pivot_fn)
+        qsort(lst, low, p, pivot_fn)
+        qsort(lst, p + 1, high, pivot_fn)
     ### END SOLUTION
+
+def scheme(lst, low, high, pivot_fn):
+    i = lst[pivot_fn(lst, low, high)]
+    pivot = lst[i]
+    lst[low], lst[i], idx = lst[i], lst[low], low
+    min, max = low, high
+    while max > min:
+        while pivot > lst[min]:
+            min += 1
+        while pivot < lst[max]:
+            max -= 1
+        lst[min], lst[max] = lst[max], lst[min]
+    lst[min], lst[max] = lst[max], lst[min]
+    return max
 
 def pivot_first(lst,low,high):
     ### BEGIN SOLUTION
+    return low
     ### END SOLUTION
 
 def pivot_random(lst,low,high):
     ### BEGIN SOLUTION
+    return random.randrange(low, high)
     ### END SOLUTION
 
 def pivot_median_of_three(lst,low,high):
     ### BEGIN SOLUTION
+    n = (low + high) // 2
+    lst2 = [(low, lst[low]), (n, lst[n]), (high, lst[high])]
+    lst2.sort(key = lambda x: x[1])
+    return lst2[1][0]
     ### END SOLUTION
 
 ################################################################################
